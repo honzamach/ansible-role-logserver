@@ -1,0 +1,28 @@
+---
+
+#
+# List of role-related packages, that will be installed on target system.
+#
+hm_logserver__package_list:
+  - syslog-ng
+  - stunnel
+
+#
+# Location for remote system log storage.
+#
+hm_logserver__host_log_dir: /var/log/cls-servers
+
+#
+# Name of the catch all log file.
+#
+hm_logserver__log_all_file: /var/log/net-all.log
+
+#
+# Age of the log files, that will be compressed to save disk space.
+#
+hm_logserver__compress_older_than: 31
+
+#
+# Age of the log files, that will be permanently removed to save disk space.
+#
+hm_logserver__cleanup_older_than: 1095

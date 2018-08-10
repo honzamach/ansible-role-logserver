@@ -1,0 +1,17 @@
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+#
+#                             IMPORTANT WARNING
+#
+#  This file is managed remotely by Ansible orchestration tool. Any local
+#  changes will be overwritten without any notice !!! You have been warned !!!
+#
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+#
+# manage-logs
+#
+#  * Compress log files older than {{ hm_logserver__compress_older_than }} days
+#  * Remove log files older than {{ hm_logserver__cleanup_older_than }} days
+#
+
+# Perform log management on each monday at 05:00am
+0 5 * * 1  root /root/manage-logs.py

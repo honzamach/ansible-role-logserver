@@ -1,0 +1,12 @@
+---
+
+#
+# Name of the syslog-ng service on Debian systems.
+#
+hm_logserver__service_name: syslog-ng
+
+#
+# Name of the stunnel service on Debian systems.
+#
+hm_logserver__service_name_stunnel: stunnel4
+

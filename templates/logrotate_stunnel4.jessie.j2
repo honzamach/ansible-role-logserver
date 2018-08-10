@@ -1,0 +1,23 @@
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+#
+#                             IMPORTANT WARNING
+#
+#  This file is managed remotely by Ansible orchestration tool. Any local
+#  changes will be overwritten without any notice !!! You have been warned !!!
+#
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+
+/var/log/stunnel4/*.log {
+    daily
+    missingok
+    notifempty
+    rotate 365
+    compress
+    delaycompress
+    dateext
+    create 640 stunnel4 stunnel4
+    sharedscripts
+    postrotate
+        /etc/init.d/stunnel4 reopen-logs > /dev/null
+    endscript
+}

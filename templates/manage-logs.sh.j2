@@ -1,0 +1,64 @@
+#!/bin/bash
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+#
+#                             IMPORTANT WARNING
+#
+#  This file is managed remotely by Ansible orchestration tool. Any local
+#  changes will be overwritten without any notice !!! You have been warned !!!
+#
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+
+script_start=$SECONDS
+echo "Current date: `date`"
+echo "Current log disk usage: `du -csh {{ hm_logserver__host_log_dir }} | grep {{ hm_logserver__host_log_dir }}`"
+
+#-------------------------------------------------------------------------------
+# Log compression section
+#-------------------------------------------------------------------------------
+
+if [[ -n $(/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log) ]]
+then
+	echo "Files older than {{ hm_logserver__compress_older_than }} days, that will be compressed:"
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log -ls
+
+	echo -n "* number of logs to be compressed: "
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log | wc -l | numfmt --grouping
+
+	echo -n "* total size of logs to be compressed: "
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log -ls | awk '{total += $7} END {printf "%.0f\n", total}' | numfmt --to=iec
+	#/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log -printf "%s\n" | perl -lnE '$sum += $_} END {say $sum' | numfmt --to=iec
+
+	echo "Starting log compression at: `date`"
+	time /usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__compress_older_than }} -type f -name *.log -exec gzip {} \;
+	echo "Finished log compression at: `date`"
+else
+	echo "There are no files older than {{ hm_logserver__compress_older_than }} days that need to be compressed."
+fi
+
+#-------------------------------------------------------------------------------
+# Log cleanup section
+#-------------------------------------------------------------------------------
+
+if [[ -n $(/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -type f -name *.log) ]]
+then
+	echo "Files older than {{ hm_logserver__cleanup_older_than }} days, that will be permanently removed:"
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -type f -name *.log -ls
+
+	echo -n "* number of logs to be permanently removed: "
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -type f -name *.log | wc -l | numfmt --grouping
+
+	echo -n "* total size of logs to be permanently removed: "
+	/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -type f -name *.log -ls | awk '{total += $7} END {printf "%.0f\n", total}' | numfmt --to=iec
+	#/usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -type f -name *.log -printf "%s\n" | perl -lnE '$sum += $_} END {say $sum' | numfmt --to=iec
+
+	echo "Starting log cleanup at: `date`"
+	time /usr/bin/find {{ hm_logserver__host_log_dir }} -depth -mtime +{{ hm_logserver__cleanup_older_than }} -delete
+	echo "Finished log cleanup at: `date`"
+else
+	echo "There are no files older than {{ hm_logserver__cleanup_older_than }} days that need to be permanently removed."
+fi
+
+echo "Current log disk usage: `du -csh {{ hm_logserver__host_log_dir }} | grep {{ hm_logserver__host_log_dir }}`"
+echo "Current date: `date`"
+script_duration=$(( SECONDS - script_start ))
+echo "Script duration: $(($script_duration / 60)) minutes and $(($script_duration % 60)) seconds"

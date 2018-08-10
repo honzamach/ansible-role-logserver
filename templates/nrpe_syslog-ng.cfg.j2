@@ -1,0 +1,10 @@
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+#
+#                             IMPORTANT WARNING
+#
+#  This file is managed remotely by Ansible orchestration tool. Any local
+#  changes will be overwritten without any notice !!! You have been warned !!!
+#
+#----------------------- <+++ansible-managed-file+++> -------------------------+
+
+command[check_syslog]={{ hm_monitored__plugins_dir }}/check_procs -c 1:1 -C syslog-ng -a "/usr/sbin/syslog-ng -F"

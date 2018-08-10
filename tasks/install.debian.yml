@@ -1,0 +1,6 @@
+---
+
+- name: Installing necessary packages
+  apt:
+    name: "{{ hm_logserver__package_list }}"
+    state: latest

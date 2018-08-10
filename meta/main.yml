@@ -1,0 +1,23 @@
+---
+
+galaxy_info:
+  role_name: logserver
+  author: Jan Mach
+  description: Ansible role for convenient installation and configuration of central log server.
+  company: CESNET, a.l.e.
+  license: MIT
+  min_ansible_version: 2.5
+  github_branch: master
+  platforms:
+    - name: Debian
+      versions:
+        - jessie
+  galaxy_tags:
+    - system
+    - logging
+
+dependencies:
+  - honzamach.accounts
+  - honzamach.certified
+  - honzamach.monitored
+  - honzamach.firewalled

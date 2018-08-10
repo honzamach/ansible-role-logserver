@@ -1,0 +1,271 @@
+---
+
+- name: Configuring syslog-ng daemon
+  template:
+    src: "{{ item }}"
+    dest: /etc/syslog-ng/syslog-ng.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/syslog-ng.conf.j2"
+    - "group_files/servers-production/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/syslog-ng.conf.j2"
+    - "group_files/servers-development/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/syslog-ng.conf.j2"
+    - "group_files/servers-demo/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/syslog-ng.conf.j2"
+    - "group_files/servers/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/syslog-ng.conf.j2"
+    - "syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "syslog-ng.conf.j2"
+  notify: Restart syslog-ng service
+
+- name: Ensuring syslog-ng daemon is running and enabled at system start.
+  service:
+    name: "{{ hm_logserver__service_name }}"
+    state: started
+    enabled: yes
+
+- name: Configuring stunnel daemon
+  template:
+    src: "{{ item }}"
+    dest: /etc/stunnel/stunnel.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/stunnel.conf.j2"
+    - "group_files/servers-production/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/stunnel.conf.j2"
+    - "group_files/servers-development/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/stunnel.conf.j2"
+    - "group_files/servers-demo/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/stunnel.conf.j2"
+    - "group_files/servers/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/stunnel.conf.j2"
+    - "stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "stunnel.conf.j2"
+  notify: Restart stunnel service
+
+- name: Ensuring stunnel daemon is running and enabled at system start.
+  service:
+    name: stunnel4
+    state: started
+    enabled: yes
+
+- name: Configuring logrotate for syslog-ng
+  template:
+    src: "{{ item }}"
+    dest: /etc/logrotate.d/syslog-ng
+    owner: root
+    group: root
+    mode: 0644
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/logrotate_syslog-ng.j2"
+    - "group_files/servers-production/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/logrotate_syslog-ng.j2"
+    - "group_files/servers-development/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/logrotate_syslog-ng.j2"
+    - "group_files/servers-demo/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/logrotate_syslog-ng.j2"
+    - "group_files/servers/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/logrotate_syslog-ng.j2"
+    - "logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "logrotate_syslog-ng.j2"
+
+- name: Configuring logrotate for stunnel
+  template:
+    src: "{{ item }}"
+    dest: /etc/logrotate.d/stunnel4
+    owner: root
+    group: root
+    mode: 0644
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/logrotate_stunnel4.j2"
+    - "group_files/servers-production/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/logrotate_stunnel4.j2"
+    - "group_files/servers-development/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/logrotate_stunnel4.j2"
+    - "group_files/servers-demo/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/logrotate_stunnel4.j2"
+    - "group_files/servers/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/logrotate_stunnel4.j2"
+    - "logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "logrotate_stunnel4.j2"
+
+- name: Configuring logrotate for network logs
+  template:
+    src: "{{ item }}"
+    dest: /etc/logrotate.d/central-log-server
+    owner: root
+    group: root
+    mode: 0644
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/logrotate_central-log-server.j2"
+    - "group_files/servers-production/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/logrotate_central-log-server.j2"
+    - "group_files/servers-development/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/logrotate_central-log-server.j2"
+    - "group_files/servers-demo/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/logrotate_central-log-server.j2"
+    - "group_files/servers/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/logrotate_central-log-server.j2"
+    - "logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "logrotate_central-log-server.j2"
+
+- name: Configuring Nagios monitoring
+  template:
+    src: "{{ item }}"
+    dest: /etc/nagios/nrpe.d/syslog-ng.cfg
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/nrpe_syslog-ng.cfg.j2"
+    - "group_files/servers-production/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/nrpe_syslog-ng.cfg.j2"
+    - "group_files/servers-development/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/nrpe_syslog-ng.cfg.j2"
+    - "group_files/servers-demo/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/nrpe_syslog-ng.cfg.j2"
+    - "group_files/servers/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/nrpe_syslog-ng.cfg.j2"
+    - "nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "nrpe_syslog-ng.cfg.j2"
+  notify: Restart NRPE service
+  when: '"servers-monitored" in group_names'
+
+- name: Configuring system status script
+  template:
+    src: "{{ item }}"
+    dest: /opt/system-status/system-status.d/20-syslog-ng
+    owner: root
+    group: root
+    mode: 0755
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/system-status-syslog-ng.j2"
+    - "group_files/servers-production/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/system-status-syslog-ng.j2"
+    - "group_files/servers-development/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/system-status-syslog-ng.j2"
+    - "group_files/servers-demo/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/system-status-syslog-ng.j2"
+    - "group_files/servers/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/system-status-syslog-ng.j2"
+    - "system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "system-status-syslog-ng.j2"
+  when: '"servers-commonenv" in group_names'
+
+- name: Installing log management script
+  template:
+    src: "{{ item }}"
+    dest: /root/manage-logs.sh
+    owner: root
+    group: root
+    mode: 0770
+    backup: yes
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/manage-logs.sh.j2"
+    - "group_files/servers-production/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/manage-logs.sh.j2"
+    - "group_files/servers-development/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/manage-logs.sh.j2"
+    - "group_files/servers-demo/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/manage-logs.sh.j2"
+    - "group_files/servers/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/manage-logs.sh.j2"
+    - "manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "manage-logs.sh.j2"
+
+- name: Installing log management cron script
+  template:
+    src: "{{ item }}"
+    dest: /etc/cron.d/manage-logs
+    owner: root
+    group: root
+    mode: 0644
+  with_first_found:
+    - "host_files/{{ inventory_hostname }}/cron_manage-logs.j2"
+    - "group_files/servers-production/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-production/cron_manage-logs.j2"
+    - "group_files/servers-development/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-development/cron_manage-logs.j2"
+    - "group_files/servers-demo/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-demo/cron_manage-logs.j2"
+    - "group_files/servers/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers/cron_manage-logs.j2"
+    - "cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "cron_manage-logs.j2"
+
+#-------------------------------------------------------------------------------
+
+- name: Ensuring main host log directory
+  file:
+    path: "{{ hm_logserver__host_log_dir }}"
+    owner: root
+    group: adm
+    mode: 0755
+    state: directory
+
+- name: Ensuring main log access directory for each unprivileged user account
+  file:
+    path: "/home/{{ item['key'] }}/logs"
+    owner: "{{ item['key'] }}"
+    group: "{{ item['key'] }}"
+    mode: 0755
+    state: directory
+  with_dict: "{{ hm_accounts__users }}"
+
+- name: Linking logs of appropriate hosts to main log access directory for each unprivileged user account
+  file:
+    src: "{{ hm_logserver__host_log_dir }}/{{ item[0] }}"
+    dest: "/home/{{ item[1] }}/logs/{{ item[0] }}"
+    state: link
+  with_nested:
+     - "{{ hm_logserver__host_logs.keys() }}"
+     - "{{ hm_accounts__users.keys() }}"
+  when: hm_logserver__host_logs[item[0]] in hm_accounts__users[item[1]]['groups']
+
+- name: Detecting list of all existing host log directories
+  find:
+    paths: "{{ hm_logserver__host_log_dir }}"
+    file_type: directory
+  register: result_host_log_dirs
+
+- name: Ensuring ownerships of unassigned host log directories
+  file:
+    path: "{{ item['path'] }}"
+    owner: root
+    group: adm
+    mode: 0750
+    state: directory
+  with_items: "{{ result_host_log_dirs['files'] }}"
+  when: (item['path']|basename not in hm_logserver__host_logs)
+
+- name: Ensuring ownerships of assigned host log directories
+  file:
+    path: "{{ hm_logserver__host_log_dir }}/{{ item['key'] }}"
+    owner: root
+    group: "{{ item['value'] }}"
+    mode: 0750
+    state: directory
+  with_dict: "{{ hm_logserver__host_logs }}"
+
+- name: Detecting list of existing links to main log access directory for each unprivileged user account
+  shell: "/usr/bin/find /home/{{ item['key'] }}/logs -type l"
+  with_dict: "{{ hm_accounts__users }}"
+  register: result_log_links
+  changed_when: False
+
+- name: Removing unnecessary links to main log access directory for each unprivileged user account
+  file:
+    path: "/home/{{ item[0]['item']['key'] }}/logs/{{ item[1]|basename }}"
+    state: absent
+  with_subelements:
+    - "{{ result_log_links['results'] }}"
+    - stdout_lines
+  when: (item[1]|basename not in hm_logserver__host_logs) or (hm_logserver__host_logs[item[1]|basename] not in hm_accounts__users[item[0]['item']['key']]['groups'])

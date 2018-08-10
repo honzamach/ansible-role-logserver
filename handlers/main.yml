@@ -1,0 +1,16 @@
+---
+
+- name: Restart syslog-ng service
+  service:
+    name: "{{ hm_logserver__service_name }}"
+    state: restarted
+
+- name: Restart stunnel service
+  service:
+    name: "{{ hm_logserver__service_name_stunnel }}"
+    state: restarted
+
+- name: Restart NRPE service
+  service:
+    name: "{{ hm_monitored__service_name }}"
+    state: restarted
