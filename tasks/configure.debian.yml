@@ -137,7 +137,7 @@
     - "nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
     - "nrpe_syslog-ng.cfg.j2"
   notify: Restart NRPE service
-  when: '"servers-monitored" in group_names'
+  when: '"servers_monitored" in group_names'
 
 - name: Configuring system status script
   template:

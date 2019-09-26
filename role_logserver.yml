@@ -11,7 +11,7 @@
 #   git clone https://github.com/honzamach/ansible-role-logged.git honzamach.logged
 #
 
-- hosts: servers-logserver
+- hosts: servers_logserver
   remote_user: root
   roles:
     - role: honzamach.logserver

@@ -116,13 +116,13 @@ roles:
 
 :envvar:`hm_monitored__plugins_dir`
 
-    Path to the Nagios plugin directory in case the server is in **servers-monitored**
+    Path to the Nagios plugin directory in case the server is in **servers_monitored**
     group and the playbook is automagically configuring monitoring of the Syslog-ng
     system.
 
 :envvar:`hm_monitored__service_name`
 
-    Name of the NRPE service in case the server is in **servers-monitored**
+    Name of the NRPE service in case the server is in **servers_monitored**
     group and the playbook is automagically configuring monitoring of the Syslog-ng
     system.
 
@@ -135,7 +135,7 @@ roles:
 Group memberships
 --------------------------------------------------------------------------------
 
-* **servers-monitored**
+* **servers_monitored**
 
   In case the target server is member of this group Nagios monitoring is automagically
   configured for the Syslog-ng system.
@@ -194,12 +194,12 @@ Example Playbook
 
 Example content of inventory file ``inventory``::
 
-    [servers-logserver]
+    [servers_logserver]
     localhost
 
 Example content of role playbook file ``playbook.yml``::
 
-    - hosts: servers-logserver
+    - hosts: servers_logserver
       remote_user: root
       roles:
         - role: honzamach.logserver
