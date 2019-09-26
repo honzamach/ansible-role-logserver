@@ -10,12 +10,8 @@
     backup: yes
   with_first_found:
     - "host_files/{{ inventory_hostname }}/syslog-ng.conf.j2"
-    - "group_files/servers-production/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/syslog-ng.conf.j2"
-    - "group_files/servers-development/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/syslog-ng.conf.j2"
-    - "group_files/servers-demo/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/syslog-ng.conf.j2"
+    - "group_files/servers-{{ msms_server_type }}/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/syslog-ng.conf.j2"
     - "group_files/servers/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/syslog-ng.conf.j2"
     - "syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2"
@@ -38,12 +34,8 @@
     backup: yes
   with_first_found:
     - "host_files/{{ inventory_hostname }}/stunnel.conf.j2"
-    - "group_files/servers-production/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/stunnel.conf.j2"
-    - "group_files/servers-development/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/stunnel.conf.j2"
-    - "group_files/servers-demo/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/stunnel.conf.j2"
+    - "group_files/servers-{{ msms_server_type }}/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/stunnel.conf.j2"
     - "group_files/servers/stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/stunnel.conf.j2"
     - "stunnel.conf.{{ ansible_lsb['codename'] }}.j2"
@@ -65,12 +57,8 @@
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/logrotate_syslog-ng.j2"
-    - "group_files/servers-production/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/logrotate_syslog-ng.j2"
-    - "group_files/servers-development/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/logrotate_syslog-ng.j2"
-    - "group_files/servers-demo/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/logrotate_syslog-ng.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_syslog-ng.j2"
     - "group_files/servers/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/logrotate_syslog-ng.j2"
     - "logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
@@ -85,12 +73,8 @@
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/logrotate_stunnel4.j2"
-    - "group_files/servers-production/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/logrotate_stunnel4.j2"
-    - "group_files/servers-development/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/logrotate_stunnel4.j2"
-    - "group_files/servers-demo/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/logrotate_stunnel4.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_stunnel4.j2"
     - "group_files/servers/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/logrotate_stunnel4.j2"
     - "logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
@@ -105,12 +89,8 @@
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/logrotate_central-log-server.j2"
-    - "group_files/servers-production/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/logrotate_central-log-server.j2"
-    - "group_files/servers-development/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/logrotate_central-log-server.j2"
-    - "group_files/servers-demo/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/logrotate_central-log-server.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/logrotate_central-log-server.j2"
     - "group_files/servers/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/logrotate_central-log-server.j2"
     - "logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
@@ -126,12 +106,8 @@
     backup: yes
   with_first_found:
     - "host_files/{{ inventory_hostname }}/nrpe_syslog-ng.cfg.j2"
-    - "group_files/servers-production/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/nrpe_syslog-ng.cfg.j2"
-    - "group_files/servers-development/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/nrpe_syslog-ng.cfg.j2"
-    - "group_files/servers-demo/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/nrpe_syslog-ng.cfg.j2"
+    - "group_files/servers-{{ msms_server_type }}/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/nrpe_syslog-ng.cfg.j2"
     - "group_files/servers/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/nrpe_syslog-ng.cfg.j2"
     - "nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2"
@@ -148,12 +124,8 @@
     mode: 0755
   with_first_found:
     - "host_files/{{ inventory_hostname }}/system-status-syslog-ng.j2"
-    - "group_files/servers-production/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/system-status-syslog-ng.j2"
-    - "group_files/servers-development/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/system-status-syslog-ng.j2"
-    - "group_files/servers-demo/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/system-status-syslog-ng.j2"
+    - "group_files/servers-{{ msms_server_type }}/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/system-status-syslog-ng.j2"
     - "group_files/servers/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/system-status-syslog-ng.j2"
     - "system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
@@ -170,12 +142,8 @@
     backup: yes
   with_first_found:
     - "host_files/{{ inventory_hostname }}/manage-logs.sh.j2"
-    - "group_files/servers-production/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/manage-logs.sh.j2"
-    - "group_files/servers-development/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/manage-logs.sh.j2"
-    - "group_files/servers-demo/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/manage-logs.sh.j2"
+    - "group_files/servers-{{ msms_server_type }}/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/manage-logs.sh.j2"
     - "group_files/servers/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/manage-logs.sh.j2"
     - "manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
@@ -190,12 +158,8 @@
     mode: 0644
   with_first_found:
     - "host_files/{{ inventory_hostname }}/cron_manage-logs.j2"
-    - "group_files/servers-production/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-production/cron_manage-logs.j2"
-    - "group_files/servers-development/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-development/cron_manage-logs.j2"
-    - "group_files/servers-demo/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
-    - "group_files/servers-demo/cron_manage-logs.j2"
+    - "group_files/servers-{{ msms_server_type }}/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
+    - "group_files/servers-{{ msms_server_type }}/cron_manage-logs.j2"
     - "group_files/servers/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
     - "group_files/servers/cron_manage-logs.j2"
     - "cron_manage-logs.{{ ansible_lsb['codename'] }}.j2"
