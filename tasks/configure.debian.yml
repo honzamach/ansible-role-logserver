@@ -130,7 +130,7 @@
     - "group_files/servers/system-status-syslog-ng.j2"
     - "system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2"
     - "system-status-syslog-ng.j2"
-  when: '"servers-commonenv" in group_names'
+  when: '"servers_commonenv" in group_names'
 
 - name: Installing log management script
   template:

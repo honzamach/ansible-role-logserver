@@ -140,7 +140,7 @@ Group memberships
   In case the target server is member of this group Nagios monitoring is automagically
   configured for the Syslog-ng system.
 
-* **servers-commonenv**
+* **servers_commonenv**
 
   In case the target server is member of this group system status script is automagically
   configured for the Syslog-ng system.
