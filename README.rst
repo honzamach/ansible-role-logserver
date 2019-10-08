@@ -1,4 +1,4 @@
-.. _section-role-application-logserver:
+.. _section-role-logserver:
 
 Role **logserver**
 ================================================================================
