@@ -1,6 +1,6 @@
 ---
 
-- name: Configuring syslog-ng daemon
+- name: "Configuring syslog-ng service"
   template:
     src: "{{ item }}"
     dest: /etc/syslog-ng/syslog-ng.conf
@@ -18,13 +18,13 @@
     - "syslog-ng.conf.j2"
   notify: Restart syslog-ng service
 
-- name: Ensuring syslog-ng daemon is running and enabled at system start.
+- name: "Ensuring syslog-ng service is running and enabled at system start."
   service:
     name: "{{ hm_logserver__service_name }}"
     state: started
     enabled: yes
 
-- name: Configuring stunnel daemon
+- name: "Configuring stunnel service"
   template:
     src: "{{ item }}"
     dest: /etc/stunnel/stunnel.conf
@@ -42,13 +42,13 @@
     - "stunnel.conf.j2"
   notify: Restart stunnel service
 
-- name: Ensuring stunnel daemon is running and enabled at system start.
+- name: "Ensuring stunnel service is running and enabled at system start"
   service:
     name: stunnel4
     state: started
     enabled: yes
 
-- name: Configuring logrotate for syslog-ng
+- name: "Configuring logrotate for syslog-ng"
   template:
     src: "{{ item }}"
     dest: /etc/logrotate.d/syslog-ng
@@ -64,7 +64,7 @@
     - "logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2"
     - "logrotate_syslog-ng.j2"
 
-- name: Configuring logrotate for stunnel
+- name: "Configuring logrotate for stunnel"
   template:
     src: "{{ item }}"
     dest: /etc/logrotate.d/stunnel4
@@ -80,7 +80,7 @@
     - "logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2"
     - "logrotate_stunnel4.j2"
 
-- name: Configuring logrotate for network logs
+- name: "Configuring logrotate for network logs"
   template:
     src: "{{ item }}"
     dest: /etc/logrotate.d/central-log-server
@@ -96,7 +96,7 @@
     - "logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2"
     - "logrotate_central-log-server.j2"
 
-- name: Configuring Nagios monitoring
+- name: "Configuring Nagios monitoring"
   template:
     src: "{{ item }}"
     dest: /etc/nagios/nrpe.d/syslog-ng.cfg
@@ -115,7 +115,7 @@
   notify: Restart NRPE service
   when: '"servers_monitored" in group_names'
 
-- name: Configuring system status script
+- name: "Configuring system status script"
   template:
     src: "{{ item }}"
     dest: /opt/system-status/system-status.d/20-syslog-ng
@@ -132,7 +132,7 @@
     - "system-status-syslog-ng.j2"
   when: '"servers_commonenv" in group_names'
 
-- name: Installing log management script
+- name: "Installing log management script"
   template:
     src: "{{ item }}"
     dest: /root/manage-logs.sh
@@ -149,7 +149,7 @@
     - "manage-logs.sh.{{ ansible_lsb['codename'] }}.j2"
     - "manage-logs.sh.j2"
 
-- name: Installing log management cron script
+- name: "Installing log management cron script"
   template:
     src: "{{ item }}"
     dest: /etc/cron.d/manage-logs
@@ -167,7 +167,7 @@
 
 #-------------------------------------------------------------------------------
 
-- name: Ensuring main host log directory
+- name: "Ensuring main host log directory"
   file:
     path: "{{ hm_logserver__host_log_dir }}"
     owner: root
@@ -175,7 +175,7 @@
     mode: 0755
     state: directory
 
-- name: Ensuring main log access directory for each unprivileged user account
+- name: "Ensuring main log access directory for each unprivileged user account"
   file:
     path: "/home/{{ item['key'] }}/logs"
     owner: "{{ item['key'] }}"
@@ -184,7 +184,7 @@
     state: directory
   with_dict: "{{ hm_accounts__users }}"
 
-- name: Linking logs of appropriate hosts to main log access directory for each unprivileged user account
+- name: "Linking logs of appropriate hosts to main log access directory for each unprivileged user account"
   file:
     src: "{{ hm_logserver__host_log_dir }}/{{ item[0].key }}"
     dest: "/home/{{ item[1].key }}/logs/{{ item[0].key }}"
@@ -194,13 +194,13 @@
      - "{{ hm_accounts__users | dict2items }}"
   when: hm_logserver__host_logs[item[0].key] in hm_accounts__users[item[1].key]['groups']
 
-- name: Detecting list of all existing host log directories
+- name: "Detecting list of all existing host log directories"
   find:
     paths: "{{ hm_logserver__host_log_dir }}"
     file_type: directory
   register: result_host_log_dirs
 
-- name: Ensuring ownerships of unassigned host log directories
+- name: "Ensuring ownerships of unassigned host log directories"
   file:
     path: "{{ item['path'] }}"
     owner: root
@@ -210,7 +210,7 @@
   with_items: "{{ result_host_log_dirs['files'] }}"
   when: (item['path']|basename not in hm_logserver__host_logs)
 
-- name: Ensuring ownerships of assigned host log directories
+- name: "Ensuring ownerships of assigned host log directories"
   file:
     path: "{{ hm_logserver__host_log_dir }}/{{ item['key'] }}"
     owner: root
@@ -219,17 +219,19 @@
     state: directory
   with_dict: "{{ hm_logserver__host_logs }}"
 
-- name: Detecting list of existing links to main log access directory for each unprivileged user account
-  shell: "/usr/bin/find /home/{{ item['key'] }}/logs -type l"
+- name: "Detecting list of existing links to main log access directory for each unprivileged user account"
+  command: "/usr/bin/find /home/{{ item['key'] }}/logs -type l"
   with_dict: "{{ hm_accounts__users }}"
   register: result_log_links
   changed_when: False
 
-- name: Removing unnecessary links to main log access directory for each unprivileged user account
+- name: "Removing unnecessary links to main log access directory for each unprivileged user account"
   file:
     path: "/home/{{ item[0]['item']['key'] }}/logs/{{ item[1]|basename }}"
     state: absent
   with_subelements:
     - "{{ result_log_links['results'] }}"
     - stdout_lines
-  when: (item[1]|basename not in hm_logserver__host_logs) or (hm_logserver__host_logs[item[1]|basename] not in hm_accounts__users[item[0]['item']['key']]['groups'])
+  when: >
+    (item[1]|basename not in hm_logserver__host_logs) or
+    (hm_logserver__host_logs[item[1]|basename] not in hm_accounts__users[item[0]['item']['key']]['groups'])
