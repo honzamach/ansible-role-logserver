@@ -7,11 +7,14 @@
 #
 #----------------------- <+++ansible-managed-file+++> -------------------------+
 
-echo "#==============================================================================#"
-echo "| Syslog status                                                                |"
-echo "#==============================================================================#"
+# Load shared library.
+. /opt/msms/lib/libmsms.sh
+
+
+widget_separator_text "SYSLOG" "${MSMS_SEPARATOR_GLYPH}" "${MSMS_SEPARATOR_PAD}" "${MSMS_FLAG_COLOR}" "${MSMS_WIDGET_WIDTH}"
+
 
 #
 # Check running processes.
 #
-{{ hm_monitored__plugins_dir }}/check_procs -c 1:1 -C syslog-ng -a "/usr/sbin/syslog-ng -F" | sed 's/:/ -/' | cut -f 1 -d \|;
+{{ hm_monitored__plugins_dir }}/check_procs -c 1:1 -C syslog-ng -a "/usr/sbin/syslog-ng -F" | sed 's/:/ -/' | cut -f 1 -d \| | nrpe_status_colorize "${MSMS_FLAG_COLOR}"
