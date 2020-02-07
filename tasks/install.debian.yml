@@ -1,6 +1,6 @@
 ---
 
-- name: "Installing necessary packages"
+- name: "Installing necessary system packages"
   apt:
-    name: "{{ hm_logserver__package_list }}"
+    name: "{{ hm_logserver__install_packages[ansible_os_family|lower]['apt'] }}"
     state: latest
