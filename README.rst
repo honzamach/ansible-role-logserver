@@ -7,7 +7,18 @@ Role **logserver**
 * `GitHub repository <https://github.com/honzamach/ansible-role-logserver>`__
 * `Travis CI page <https://travis-ci.org/honzamach/ansible-role-logserver>`__
 
-Ansible role for convenient installation and configuration of central log server.
+Ansible role for convenient installation and configuration of central log server
+capable of receiving system logs from many other servers in the network. Access to
+log ports is restricted with firewall only to listed IP addresses. Currently
+following logging options/ports are supported:
+
+1. Port 514 - Native TLS encryption with client certificate verification.
+2. Port 1514 - TLS encryption with client certificate verification via Stunnel.
+3. Port 2514 - Native TLS encryption without client certificate verification.
+
+Administrators of servers logging to the central log server are enabled read access
+to log files via SSH. These files are linked to their home directories into
+``/home/[user-name]/logs``.
 
 **Table of Contents:**
 
@@ -51,9 +62,21 @@ Dependencies
 This role is dependent on following roles:
 
 * :ref:`accounts <section-role-accounts>`
+
+  This role is used to manage user accounts to enable access to server logs for
+  administrators of that server.
+
 * :ref:`certified <section-role-certified>`
+
+  This role is used to manage server certificates.
+
 * :ref:`monitored <section-role-monitored>`
+
+  This role is used to configure log server monitoring.
+
 * :ref:`firewalled <section-role-firewalled>`
+
+  This role is used to restrict access to log ports only from certain hosts.
 
 No other roles have dependency on this role.
 
@@ -64,6 +87,9 @@ Usage
 --------------------------------------------------------------------------------
 
 Example content of inventory file ``inventory``::
+
+    [servers]
+    your-server
 
     [server_central_logserver]
     your-server
@@ -206,6 +232,98 @@ Managed files
 This role manages content of following files on target system:
 
 * ``/etc/syslog-ng/syslog-ng.conf`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/syslog-ng.conf.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/syslog-ng.conf.j2``
+    ``inventory/group_files/servers/honzamach.logserver/syslog-ng.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/syslog-ng.conf.j2``
+
+* ``/etc/stunnel/stunnel.conf`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/stunnel.conf.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/stunnel.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/stunnel.conf.j2``
+    ``inventory/group_files/servers/honzamach.logserver/stunnel.conf.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/stunnel.conf.j2``
+
+* ``/etc/logrotate/syslog-ng`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/logrotate_syslog-ng.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_syslog-ng.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_syslog-ng.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_syslog-ng.j2``
+
+* ``/etc/logrotate/stunnel4`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/logrotate_stunnel4.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_stunnel4.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_stunnel4.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_stunnel4.j2``
+
+* ``/etc/logrotate/central-log-server`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/logrotate_central-log-server.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/logrotate_central-log-server.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_central-log-server.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/logrotate_central-log-server.j2``
+
+* ``/etc/nagios/nrpe.d/syslog-ng.cfg`` *[TEMPLATE]*
+
+  This file will be present in case the server is has membership in ``servers_monitored`` group.
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/nrpe_syslog-ng.cfg.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/nrpe_syslog-ng.cfg.j2``
+    ``inventory/group_files/servers/honzamach.logserver/nrpe_syslog-ng.cfg.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/nrpe_syslog-ng.cfg.j2``
+
+* ``/opt/system-status/system-status.d/20-syslog-ng`` *[TEMPLATE]*
+
+  This file will be present in case the server is has membership in ``servers_commonenv`` group.
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/system-status-syslog-ng.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/system-status-syslog-ng.j2``
+    ``inventory/group_files/servers/honzamach.logserver/system-status-syslog-ng.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/system-status-syslog-ng.j2``
+
+* ``/root/manage-logs.sh`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/manage-logs.sh.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/manage-logs.sh.j2``
+    ``inventory/group_files/servers/honzamach.logserver/manage-logs.sh.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/manage-logs.sh.j2``
+
+* ``/etc/cron.d/manage-logs`` *[TEMPLATE]*
+
+  Customizable with following templates::
+
+    ``inventory/host_files/{{ inventory_hostname }}/honzamach.logserver/cron_manage-logs.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers_{{ msms_server_type }}/honzamach.logserver/cron_manage-logs.j2``
+    ``inventory/group_files/servers/honzamach.logserver/cron_manage-logs.{{ ansible_lsb['codename'] }}.j2``
+    ``inventory/group_files/servers/honzamach.logserver/cron_manage-logs.j2``
+
+
 
 
 .. _section-role-logserver-author:
